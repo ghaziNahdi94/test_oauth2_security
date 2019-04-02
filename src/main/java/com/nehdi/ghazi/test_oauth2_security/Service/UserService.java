@@ -1,4 +1,4 @@
-package com.nehdi.ghazi.test_oauth2_security;
+package com.nehdi.ghazi.test_oauth2_security.Service;
 
 import com.nehdi.ghazi.test_oauth2_security.Entity.UserEntity;
 import com.nehdi.ghazi.test_oauth2_security.Repository.UserRepository;
