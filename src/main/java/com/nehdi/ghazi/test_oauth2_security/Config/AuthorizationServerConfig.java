@@ -16,12 +16,15 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
   private final AuthenticationManager authenticationManager;
   private final PasswordEncoder passwordEncoder;
+  private final AccountDetailsService accountDetailsService;
 
   @Autowired
   public AuthorizationServerConfig(
-      AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder) {
+      AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder,
+      AccountDetailsService accountDetailsService) {
     this.authenticationManager = authenticationManager;
     this.passwordEncoder = passwordEncoder;
+    this.accountDetailsService = accountDetailsService;
   }
 
   @Override
@@ -32,15 +35,17 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
   @Override
   public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
     clients.inMemory().withClient("ghazi")
-        .authorizedGrantTypes("password")
+        .authorizedGrantTypes("password", "refresh_token")
         .scopes("read", "write")
         .resourceIds("oauth2-resource")
-        .accessTokenValiditySeconds(5000)
+        .accessTokenValiditySeconds(20)
+        .refreshTokenValiditySeconds(10000)
         .secret(passwordEncoder.encode("nehdi"));
   }
 
   @Override
   public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
     endpoints.authenticationManager(authenticationManager);
+    endpoints.userDetailsService(accountDetailsService);
   }
 }
